@@ -1,0 +1,23 @@
+git:
+  repo: 'stl-mug-201403'
+  url: 'git@github.com:tychoish/stl-mug-201403'
+project:
+  name: 'STL MUG 201403'
+  tag: 'stl-mug-201403'
+  url: 'http://tychoish.net'
+  title: 'STL MUG 201403'
+version:
+  release: '0.1'
+  branch: 'master'
+system:
+  tools: git@github.com:cyborginstitute/institute-tools.git
+paths:
+  output: 'build'
+  source: 'source'
+  includes: 'source/includes'
+  images: 'source/images'
+  tools: 'bin'
+  buildsystem: 'build/docs-tools'
+  builddata: 'config'
+  locale: 'locale'
+...

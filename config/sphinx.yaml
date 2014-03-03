@@ -1,0 +1,9 @@
+html:
+  tags:
+    - web
+slides:
+  tags: 
+    - slides
+latex:
+  tags: 
+    - print

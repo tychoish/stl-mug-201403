@@ -1,0 +1,175 @@
+====================
+MongoDB Optimization
+====================
+
+*St. Louis MongoDB User Group, March 2014*
+
+:presenter: Sam Kleinman, Lead Technical Writer
+:company: MongoDB            
+:link: http://tychoish.net/stl-mug-201403/
+:slides: http://tychoish.net/stl-mug-201403/slides
+
+Overview
+--------
+
+- Query Analysis
+- Indexing
+- Disks
+- Architecture
+
+Query Analysis
+--------------
+
+``.explain()``
+~~~~~~~~~~~~~~
+
+Profiler
+~~~~~~~~
+
+Indexes
+-------
+
+Properties
+~~~~~~~~~~
+
+- ordered
+
+- compact
+
+A classic trade between read performance and both storage space and write
+performance.
+
+Create Indexes
+~~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+   db.records.ensureIndex( { x: 1 } )
+   db.records.ensureIndex( { x: -1 } )
+   db.records.ensureIndex( { x: "hash" } )
+   db.records.ensureIndex( { content: "text" } )
+   db.records.ensureIndex( { content: "2dsphere" } )
+   db.records.ensureIndex( { content: "2d" } )
+
+Aside: Arrays
+~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+   { "_id": ObjectId(...), "x": 1 }
+   { "_id": ObjectId(...), "x": [ 1, 3, 4, 5 ] }
+   { "_id": ObjectId(...), "x": [ { a: 1 }, { b: 2 } ] }
+
+Query Design
+------------
+
+Cardinality
+~~~~~~~~~~~
+
+.. code-block:: javascript
+
+   { "_id": ObjectId(...), "x": 1 }
+   { "_id": ObjectId(...), "x": 4 }
+   { "_id": ObjectId(...), "x": 4 }
+   { "_id": ObjectId(...), "x": 4 }
+   { "_id": ObjectId(...), "x": 4 }
+   { "_id": ObjectId(...), "x": 6 }
+   { "_id": ObjectId(...), "x": 10 }
+
+.. code-block:: javascript
+
+   db.records.find( { x: 1 } )
+
+.. code-block:: javascript
+                
+   db.records.find( { x: { $lt: 5 } } )
+
+.. code-block:: javascript
+
+   db.records.find( { x: { $gt: 3 } } )
+
+Selectivity
+~~~~~~~~~~~
+
+.. code-block:: javascript
+                
+   db.records.find( { x: { $ne: 1 } } )
+
+.. code-block:: javascript
+                
+   db.records.find( { x: { $nin: [ 1, 4, 8 ] } } )
+
+Complexity
+~~~~~~~~~~
+
+.. code-block:: javascript
+
+   { "_id": ObjectId(...), "x": 1, "y": 10 }
+   { "_id": ObjectId(...), "x": 4, "y": 4 }
+   { "_id": ObjectId(...), "x": 4, "y": 18 }
+   { "_id": ObjectId(...), "x": 4, "y": 22 }
+   { "_id": ObjectId(...), "x": 4, "y": 16 }
+   { "_id": ObjectId(...), "x": 6, "y": 9}
+   { "_id": ObjectId(...), "x": 10, "y": 1 }
+
+.. code-block:: javascript
+                
+   db.records.find( { x: { $gt: 5 }, y: { $lt: 4 } } )
+
+Covered Queries
+~~~~~~~~~~~~~~~
+
+Not covered:
+
+.. code-block:: javascript
+
+   db.records.ensureIndex( { x: 1 } )
+   db.records.find( { x: { $gt: 5 }, y: { $lt: 4 } }, { y: 1 } )
+   db.records.find( { x: { $gt: 5 }, y: { $lt: 4 } }, { x: 1 } )
+
+Covered: 
+
+.. code-block:: javascript
+                
+   db.records.ensureIndex( { x: 1 } )
+   db.records.find( { x: { $gt: 5 }, y: { $lt: 4 } }, { _id: 0, x: 1 } )
+
+(*Not available for sharded collections.*)
+
+Disks
+-----
+
+Random I/O is a Challenge
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Database throughput depends on the I/O throughput of the storage
+system.
+
+- Use SSDs if you can.
+  
+- Use RAID 10 with HDDs.
+
+Filesystems
+~~~~~~~~~~~
+
+MongoDB preallocates files.
+
+- set ``noatime``
+
+- Use ``ext4`` or ``xfs``. (Avoid ``ext3``)
+
+Architecture
+------------
+
+Sharded Clusters
+~~~~~~~~~~~~~~~~
+
+Sharding distributes a single logical data set across a group of
+``mongod`` instances.
+
+Working with sharded clusters:
+
+- Consider complexity costs.
+  
+- If your application will require a sharded cluster, begin sharding
+  earlier than you need.
