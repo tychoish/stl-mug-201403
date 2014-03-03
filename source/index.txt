@@ -1,6 +1,6 @@
-====================
-MongoDB Optimization
-====================
+=======================
+MongoDB Tuning Overview
+=======================
 
 *St. Louis MongoDB User Group, March 2014*
 
@@ -22,6 +22,106 @@ Query Analysis
 
 ``.explain()``
 ~~~~~~~~~~~~~~
+
+Query Plans
+-----------
+
+
+Collection Scan
+~~~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+   db.foo.find().explain()
+   {
+      "cursor" : "BasicCursor",
+      "isMultiKey" : false,
+      "n" : 100,
+      "nscannedObjects" : 100,
+      "nscanned" : 100,
+      "nscannedObjectsAllPlans" : 100,
+      "nscannedAllPlans" : 100,
+      "scanAndOrder" : false,
+      "indexOnly" : false,
+      "nYields" : 0,
+      "nChunkSkips" : 0,
+      "millis" : 0,
+      "indexBounds" : { }
+   }
+
+Indexed Query
+~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+   db.foo.ensureIndex({ x: 1 })
+   db.foo.find( { x: 1 } ).explain()
+   {
+     "cursor" : "BtreeCursor x_1",
+     "isMultiKey" : false,
+     "n" : 1,
+     "nscannedObjects" : 1,
+     "nscanned" : 1,
+     "nscannedObjectsAllPlans" : 1,
+     "nscannedAllPlans" : 1,
+     "scanAndOrder" : false,
+     "indexOnly" : false,
+     "nYields" : 0,
+     "nChunkSkips" : 0,
+     "millis" : 0,
+     "indexBounds" : {
+           "x" : [ [ 1, 1 ] ]
+     }
+   }
+
+Partially Indexed Query
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+   db.foo.find( { x:  { $lt: 50 } , r: { $gt: 0.5 } }).explain()
+   {
+      "cursor" : "BtreeCursor x_1",
+      "isMultiKey" : false,
+      "n" : 33,
+      "nscannedObjects" : 50,
+      "nscanned" : 50,
+      "nscannedObjectsAllPlans" : 100,
+      "nscannedAllPlans" : 100,
+      "scanAndOrder" : false,
+      "indexOnly" : false,
+      "nYields" : 0,
+      "nChunkSkips" : 0,
+      "millis" : 0,
+      "indexBounds" : {
+            "x" : [ [ -1.7976931348623157e+308, 50 ] ]
+      }
+   }
+
+Covered Query
+~~~~~~~~~~~~~
+                
+.. code-block:: javascript
+
+   db.foo.find( { x:  { $lt: 50 } }, { x: 1, _id: 0} ).explain()
+   {
+      "cursor" : "BtreeCursor x_1",
+      "isMultiKey" : false,
+      "n" : 50,
+      "nscannedObjects" : 0,
+      "nscanned" : 50,
+      "nscannedObjectsAllPlans" : 0,
+      "nscannedAllPlans" : 50,
+      "scanAndOrder" : false,
+      "indexOnly" : true,
+      "nYields" : 0,
+      "nChunkSkips" : 0,
+      "millis" : 0,
+      "indexBounds" : {
+            "x" : [ [ -1.7976931348623157e+308, 50 ] ]
+      }
+   }
+
 
 Profiler
 ~~~~~~~~
