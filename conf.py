@@ -1,4 +1,7 @@
-import sys, os
+import sys
+import os
+import datetime
+
 project_root = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 from bootstrap import buildsystem, master_conf
@@ -19,8 +22,8 @@ templates_path = ['']
 source_suffix = '.txt'
 master_doc = 'index'
 
-project = u'Better MongoDB Documentation'
-copyright = u'2012, 10gen Inc.'
+project = u'MongoDB Tuning Overview'
+copyright = u'{0}, MongoDB Inc.'.format(datetime.datetime.today().year)
 
 version = '1.0'
 release = version
@@ -43,8 +46,6 @@ html_sidebars = {
 # -- Options for HTML output ---------------------------------------------------
 html_theme_path = [os.path.join(conf.paths.projectroot, conf.paths.buildsystem, 'themes')]
 html_theme = 'tychoish'
-
-print(html_theme_path)
 
 html_title = "The Documentation Project at 10gen"
 html_use_smartypants = True
