@@ -143,6 +143,7 @@ Profile Output: Update
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
+   :emphasize-lines: 8
 
    {   "ts" : ISODate("2012-12-10T19:31:28.977Z"),
        "op" : "update",
@@ -169,18 +170,17 @@ Profile Output: Update
 Indexes
 -------
 
-Properties
-~~~~~~~~~~
+Index Properties
+~~~~~~~~~~~~~~~~
 
 - ordered
 
 - compact
 
-A classic trade between read performance and both storage space as
-well as write performance.
-
 Unless a query can use an index *every* query must inspect *every*
 document in a collection.
+
+Improves read performance by duplicating some data in the index.
 
 Create Indexes
 ~~~~~~~~~~~~~~
