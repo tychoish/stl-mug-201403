@@ -6,6 +6,7 @@ project_root = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 from bootstrap import buildsystem, master_conf
 sys.path.append(os.path.join(project_root, buildsystem))
+sys.path.append(os.path.join(project_root, "sphinxext"))
 from utils.config import get_conf
 
 conf = get_conf(os.path.dirname(master_conf))
@@ -17,7 +18,7 @@ conf = get_conf(os.path.dirname(master_conf))
 
 needs_sphinx = '1.0'
 
-extensions = ["sphinx.ext.intersphinx", "sphinx.ext.extlinks", "hieroglyph"]
+extensions = ["intermanual", "sphinx.ext.extlinks", "hieroglyph", "mongodb"]
 templates_path = ['']
 source_suffix = '.txt'
 master_doc = 'index'
@@ -29,7 +30,7 @@ version = '1.0'
 release = version
 
 exclude_patterns = []
-pygments_style = 'sphinx'
+npygments_style = 'sphinx'
 
 extlinks = {}
 
@@ -42,6 +43,10 @@ html_theme_options = {
 html_sidebars = {
     '**': ['localtoc.html', 'relations.html', 'sourcelink.html']
 }
+
+intersphinx_mapping = {'mongodb': ( 'http://docs.mongodb.org/manual', os.path.join(conf.paths.projectroot,
+                                                                                   conf.paths.output,
+                                                                                   "mongodb.inv")) }
 
 # -- Options for HTML output ---------------------------------------------------
 html_theme_path = [os.path.join(conf.paths.projectroot, conf.paths.buildsystem, 'themes')]
