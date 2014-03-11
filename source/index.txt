@@ -15,11 +15,11 @@ MongoDB Performance Q&A
 Overview
 --------
 
-- :ref:`Query Analysis <query-analysis>`
-- :ref:`Indexing <indexing>`
-- :ref:`Disks and filesystems <other-factors>`
-- :ref:`Architecture <sharded-clusters>`
-- :ref:`More Questions <more-questions>`
+- Query Analysis
+- Indexing
+- Disks and filesystems
+- Architecture
+- More Questions
 
 .. _query-analysis:
 
@@ -41,7 +41,7 @@ Explain Output
 ~~~~~~~~~~~~~~
 
 .. code-block:: javascript
-   :emphasize-lines: 2, 4-5, 8-9
+   :emphasize-lines: 1, 4-5, 8-9
 
    {  "cursor" : "BtreeCursor x_1",
       "isMultiKey" : false,
@@ -77,7 +77,7 @@ Profiler Output: Query (First)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
-   :emphasize-lines: 2, 5, 6, 16
+   :emphasize-lines: 2, 6, 7, 16
 
    { "op" : "query",
      "ns" : "test.foo",
