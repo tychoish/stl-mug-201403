@@ -11,16 +11,15 @@ $(BUILDDIR)/html:html
 
 .PHONY:stage
 
-$(BUILDDIR)/output:$(BUILDDIR)/slides $(BUILDDIR)/html 
+$(BUILDDIR)/output:$(BUILDDIR)/slides $(BUILDDIR)/html
 	mkdir -p $@
 	cp -R $(BUILDDIR)/html/* $@
 	cp -R $(BUILDDIR)/slides $@
-	touch source/index.txt
 
 stage:$(BUILDDIR)/output
 
 push:stage
-	rsync -arz $(BUILDDIR)/output/ public@adorno:/srv/public/webroot/tychoish/201403-stl-mug
+	rsync -arz $(BUILDDIR)/output/ tychoish@foucault.cyborginstitute.net:/home/tychoish/public/tychoweb/stl-mug-201403
 
 ########################################################################
 
@@ -32,5 +31,5 @@ html:
 	$(SPHINXBUILD) -b html $(SLIDESPHINXOPTS) $(BUILDDIR)/html
 	@echo "[HTML] site build complete."
 
-clean: 
+clean:
 	rm -rf $(BUILDDIR)

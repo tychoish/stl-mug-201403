@@ -41,10 +41,9 @@ Explain Output
 ~~~~~~~~~~~~~~
 
 .. code-block:: javascript
-   :emphasize-lines: 2, 4-6, 9-10
+   :emphasize-lines: 2, 4-5, 8-9
 
-   {
-      "cursor" : "BtreeCursor x_1",
+   {  "cursor" : "BtreeCursor x_1",
       "isMultiKey" : false,
       "n" : 50,
       "nscannedObjects" : 0,
@@ -57,9 +56,7 @@ Explain Output
       "nChunkSkips" : 0,
       "millis" : 0,
       "indexBounds" : {
-            "x" : [ [ -1.7976931348623157e+308, 50 ] ]
-      }
-   }
+            "x" : [ [ -1.7976931348623157e+308, 50 ] ] } }
 
 Profiling
 ~~~~~~~~~
@@ -80,9 +77,9 @@ Profiler Output: Query (First)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
+   :emphasize-lines: 2, 5, 6, 16
 
-   {
-     "op" : "query",
+   { "op" : "query",
      "ns" : "test.foo",
      "query" : { "r" : { "$gt" : 0.4 }, "x" : 4 },
      "ntoreturn" : 0,
@@ -97,6 +94,7 @@ Profiler Output: Query (First)
                      "timeAcquiringMicros" : {
                          "r" : NumberLong(15),
                          "w" : NumberLong(3) } },
+     "nreturned" : 5,
    // ...
 
 Profiler Output: Query (Second)
@@ -105,7 +103,6 @@ Profiler Output: Query (Second)
 .. code-block:: javascript
 
    // ...
-     "nreturned" : 5,
      "responseLength" : 240,
      "millis" : 1,
      "execStats" : {
@@ -140,8 +137,7 @@ Profile Output: Insert
                            "w" : NumberLong(63) } },
       "millis" : 1,
       "execStats" : { },
-      "ts" : ISODate("2014-03-11T00:43:32.581Z"),
-   }
+      "ts" : ISODate("2014-03-11T00:43:32.581Z") }
 
 Profile Output: Update
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -255,11 +251,11 @@ Indexed Query
 ~~~~~~~~~~~~~
 
 .. code-block:: javascript
+   :emphasize-lines: 3, 6, 7
 
    db.foo.ensureIndex({ x: 1 })
    db.foo.find( { x: 1 } ).explain()
-   {
-     "cursor" : "BtreeCursor x_1",
+   { "cursor" : "BtreeCursor x_1",
      "isMultiKey" : false,
      "n" : 1,
      "nscannedObjects" : 1,
@@ -271,19 +267,16 @@ Indexed Query
      "nYields" : 0,
      "nChunkSkips" : 0,
      "millis" : 0,
-     "indexBounds" : {
-           "x" : [ [ 1, 1 ] ]
-     }
-   }
+     "indexBounds" : { "x" : [ [ 1, 1 ] ] } }
 
 Collection Scan
 ~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
+   :emphasize-lines: 2
 
    db.foo.find( { x: 4 } ).hint( { "$natural": 1 } ).explain()
-   {
-     "cursor" : "BasicCursor",
+   { "cursor" : "BasicCursor",
      "isMultiKey" : false,
      "n" : 7,
      "nscannedObjects" : 7001,
@@ -294,17 +287,16 @@ Collection Scan
      "indexOnly" : false,
      "nYields" : 54,
      "nChunkSkips" : 0,
-     "millis" : 3,
-   }
+     "millis" : 3 }
 
 Partially Indexed Query
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
+   :emphasize-lines: 2, 4, 5, 6
 
    db.foo.find( { x:  { $lt: 50 } , r: { $gt: 0.5 } }).explain()
-   {
-      "cursor" : "BtreeCursor x_1",
+   {  "cursor" : "BtreeCursor x_1",
       "isMultiKey" : false,
       "n" : 33,
       "nscannedObjects" : 50,
@@ -317,9 +309,7 @@ Partially Indexed Query
       "nChunkSkips" : 0,
       "millis" : 0,
       "indexBounds" : {
-            "x" : [ [ -1.7976931348623157e+308, 50 ] ]
-      }
-   }
+            "x" : [ [ -1.7976931348623157e+308, 50 ] ] } }
 
 Compound Indexes
 ~~~~~~~~~~~~~~~~
@@ -368,11 +358,10 @@ Covered Query Example
 ~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
-   :emphasize-lines: 11
+   :emphasize-lines: 5, 10
 
    db.foo.find( { x:  { $lt: 50 } }, { x: 1, _id: 0} ).explain()
-   {
-      "cursor" : "BtreeCursor x_1",
+   {  "cursor" : "BtreeCursor x_1",
       "isMultiKey" : false,
       "n" : 50,
       "nscannedObjects" : 0,
@@ -384,10 +373,7 @@ Covered Query Example
       "nYields" : 0,
       "nChunkSkips" : 0,
       "millis" : 0,
-      "indexBounds" : {
-            "x" : [ [ -1.7976931348623157e+308, 50 ] ]
-      }
-   }
+      "indexBounds" : { "x" : [ [ -1.7976931348623157e+308, 50 ] ] } }
 
 .. _other-factors:
 

@@ -41,7 +41,7 @@ html_theme_options = {
 }
 
 html_sidebars = {
-    '**': ['localtoc.html', 'relations.html', 'sourcelink.html']
+    '**': []
 }
 
 intersphinx_mapping = {'mongodb': ( 'http://docs.mongodb.org/manual', os.path.join(conf.paths.projectroot,
